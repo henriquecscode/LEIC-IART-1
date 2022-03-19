@@ -2,7 +2,8 @@ EMPTY = 0
 WHITE = 1
 BLACK = 2
 
-
+# TODO Make so player1 and player2 are dicts so O(1) in search. The value can be the moving values (number of pieces in the lines)
+# Each movement will therefore update the values for every piece so taht the AI can just look up instead of having to calculate for each
 class Piece:
     def __init__(self, s) -> None:
         self.symbol = s
@@ -29,6 +30,8 @@ class Board:
     def __init__(self):
         self.n = 8
         self.board = self.create_board()
+        self.player1 = self._get_player_1()
+        self.player2 = self._get_player_2()
 
     @staticmethod
     def create_extreme_lines():
@@ -50,8 +53,10 @@ class Board:
             # str += ' '.join(map(str, line))
         return rep
 
-    def _count_line(line):
-        return len(x != E() for x in line)
+    def _count_line(self, line):
+        return len([x for x in line if x != E()])
+        # return len(list(filter(lambda x: x != E(), line)))
+
     def get_horizontal_n_pieces(self, row, col):
         line = self.board[row]
         return self._count_line(line)
@@ -62,10 +67,17 @@ class Board:
 
     def get_b24_diagonal_n_pieces(self, row, col):
         # Left to right
-        line = [x[col-row+i] for i,x in self.board.enumerate() if 0 <= col - row + i < self.n] 
+        line = [self.board[i][col-row+i] for i in range(self.n) if 0 <= (col - row + i) < self.n] 
         return self._count_line(line)
 
     def get_b13_diagonal_n_pieces(self, row, col):
         # Right to left
-        line = [x[col+row-i] for i,x in self.board.enumerate() if 0 <= col - row + i < self.n] 
+        line = [self.board[i][col+row-i] for i in range(self.n) if 0 <= (col+row-i) < self.n] 
         return self._count_line(line)
+
+    def _get_player_1(self):
+        return self._get_player_symbol(W())
+    def _get_player_2(self):
+        return self._get_player_symbol(B())
+    def _get_player_symbol(self, s):
+        return [(row, col) for row in range(self.n) for col in range(self.n)  if self.board[row][col]== s]
