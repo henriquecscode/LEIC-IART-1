@@ -1,9 +1,14 @@
+from pandas import pivot
+
+
 EMPTY = 0
-WHITE = 1
-BLACK = 2
+WHITE = 2
+BLACK = 1
 
 # TODO Make so player1 and player2 are dicts so O(1) in search. The value can be the moving values (number of pieces in the lines)
 # Each movement will therefore update the values for every piece so taht the AI can just look up instead of having to calculate for each
+# Piece{ coord: (int, int), no_in_same_horizontal: int, no_in_same_vertical: int, no_in_b13_dia: int, no_in_b24_dia: int}
+# Each player is a list of their pieces
 class Piece:
     def __init__(self, s) -> None:
         self.symbol = s
@@ -27,11 +32,15 @@ class Black(Piece):
 B = Black()
 
 class Board:
+    n = 8
+    _player_1_symbol = B
+    _player_2_symbol = W
+    _player_symbols = [_player_1_symbol, _player_2_symbol]
     def __init__(self):
-        self.n = 8
         self.board = self.create_board()
         self.player1 = self._get_player_1()
         self.player2 = self._get_player_2()
+        self.players = [self.player1, self.player2]
 
     @staticmethod
     def create_extreme_lines():
@@ -76,8 +85,177 @@ class Board:
         return self._count_line(line)
 
     def _get_player_1(self):
-        return self._get_player_symbol(W())
+        return self._get_player_symbol(self._player_2_symbol())
     def _get_player_2(self):
-        return self._get_player_symbol(B())
+        return self._get_player_symbol(self._player_1_symbol())
     def _get_player_symbol(self, s):
         return [(row, col) for row in range(self.n) for col in range(self.n)  if self.board[row][col]== s]
+
+    def _update_move(self):
+        self.player1 = self._get_player_1()
+        self.player2 = self._get_player_2()
+
+    def end_game(self):
+
+        #Both can be affected by a play
+        end1 = self._no_pieces(1)
+        end2 = self._no_pieces(2)
+
+        if end1 or end2:
+            return True
+
+        #Only the one of the player that played can be affected (towards better)
+        conn1 = self._connected(1)
+        conn2 = self._connected(2)
+
+        if conn1 or conn2:
+            return True
+
+    def _no_pieces(self, player):
+        return not len(self.players[player])
+
+    def _connected(self, player):
+        if len(self.players[player]) == 1:
+            return True
+
+        else:
+            return self._calculate_connected(player)
+
+    def _calculate_connected(self, player):
+        # Hard stuff
+        pieces = self.players[player]
+        n_pieces = len(pieces)
+
+        if n_pieces == 0:
+            raise Exception
+
+        cur_n_pieces = 1
+        states = {pieces[0]}
+        queue = [pieces[0]]
+        while queue:
+            row, col = queue[0]
+            queue.pop(0)
+        # while cur_n_pieces < n_pieces:
+            neighbours = self._get_neighbours(row, col)
+            for neigh in neighbours:
+                if neigh not in states:
+                    states.add(neigh)
+                    queue.append(neigh)
+                    cur_n_pieces += 1
+
+        if cur_n_pieces == n_pieces:
+            return True
+        elif cur_n_pieces < n_pieces:
+            return False
+        else:
+            raise Exception
+            
+
+    def _get_neighbours(self, row, col):
+        return [(r,c) for r in range(self.n) for c in range(self.n) if self._is_different_valid_pos(row, col, r, c)]
+
+    def _is_different_valid_pos(self, row, col, new_row, new_col):
+        return 0 <= new_row < self.n and 0 <= new_col < self.n and (row, col) != (new_row, new_col)
+
+
+    def play_piece(self, player, row, col, orientation, direction):
+        """
+        Parameters
+        -----
+        player: int
+        orientation: int
+            0 vertical
+            1 horizontal
+            2 diagonal 13
+            3 diagonal 24
+        direction: int
+            0 if to top or left, 1 if to bottom or right
+        """
+        s = self._player_symbols[player]()
+        if self.board[row][col] != s:
+            return False
+
+        if orientation == 0:
+            no_moves = self.get_vertical_n_pieces(row, col)
+        elif orientation == 1:
+            no_moves = self.get_horizontal_n_pieces(row, col)
+        elif orientation == 2:
+            if direction == 0:
+                no_moves = self.get_b24_diagonal_n_pieces(row, col)
+            elif direction == 1:
+                no_moves = self.get_b13_diagonal_n_pieces(row,col)
+            else: 
+                raise Exception
+        else:
+            raise Exception
+        new_row, new_col = row, col
+
+        vector = self._get_line_vector(orientation, direction)
+        while no_moves:
+
+            blocking = self._is_opponent_blocking(s, new_row, new_col)
+            if blocking:
+                return False
+
+            new_row += vector[0]
+            new_col += vector[1]
+
+            if  not 0 <= new_row < self.n or not 0 <= new_col < self.n:
+                # Too many pieces in the direction will go out of bounds
+                return False
+
+            no_moves -= 1
+
+        self._move_piece(row, col, new_row, new_col)
+
+        return True
+        
+    def _get_line_vector(self, orientation, direction):
+        """
+        Parameters
+        -----
+        orientation: int
+            0 vertical
+            1 horizontal
+            2 diagonal 13
+            3 diagonal 24
+        direction: int
+            0 if to top or left, 1 if to bottom or right
+        """
+        if orientation == 0:
+            vector = (1,0)
+        elif orientation == 1:
+            vector = (0,1)
+        elif orientation == 2:
+            vector = (1,-1)
+        elif orientation == 3:
+            vector =(1,1)
+        else:
+            raise Exception
+
+        if direction == 0:
+            vector = tuple(-x for x in vector)
+        elif direction == 1:
+            pass
+        else:
+            raise Exception
+
+        return vector
+
+    def _is_opponent_blocking(self, s, row, col):
+        """
+        Verifies every piece (including start) but for the last one
+        If the last is of the opponent doesn't matter
+        If any of the intermediary is different, then it must not be the least
+        """
+        new_s = self.board[row][col]
+        if new_s != E() and new_s != s:
+            return True
+        return False
+    
+    def _move_piece(self, row, col, new_row, new_col):
+        s = self.board[row][col]
+        self.board[row][col] = E()
+        self.board[new_row][new_col] = s
+
+        self._update_move()
