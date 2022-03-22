@@ -38,9 +38,7 @@ class Board:
     _player_symbols = [_player_1_symbol, _player_2_symbol]
     def __init__(self):
         self.board = self.create_board()
-        self.player1 = self._get_player_1()
-        self.player2 = self._get_player_2()
-        self.players = [self.player1, self.player2]
+        self.players = {0: self.get_player_pieces(0), 1: self.get_player_pieces(1)}
 
     @staticmethod
     def create_extreme_lines():
@@ -84,29 +82,25 @@ class Board:
         line = [self.board[i][col+row-i] for i in range(self.n) if 0 <= (col+row-i) < self.n] 
         return self._count_line(line)
 
-    def _get_player_1(self):
-        return self._get_player_symbol(self._player_2_symbol())
-    def _get_player_2(self):
-        return self._get_player_symbol(self._player_1_symbol())
-    def _get_player_symbol(self, s):
-        return [(row, col) for row in range(self.n) for col in range(self.n)  if self.board[row][col]== s]
+    def get_player_pieces(self, player):
+        return [(row, col) for row in range(self.n) for col in range(self.n)  if self.board[row][col]== self._player_symbols[player]] 
 
     def _update_move(self):
-        self.player1 = self._get_player_1()
-        self.player2 = self._get_player_2()
+        for i in range(2):
+            self.players[i] = self.get_player_pieces(i)
 
     def end_game(self):
 
         #Both can be affected by a play
-        end1 = self._no_pieces(1)
-        end2 = self._no_pieces(2)
+        end1 = self._no_pieces(0)
+        end2 = self._no_pieces(1)
 
         if end1 or end2:
             return True
 
         #Only the one of the player that played can be affected (towards better)
-        conn1 = self._connected(1)
-        conn2 = self._connected(2)
+        conn1 = self._connected(0)
+        conn2 = self._connected(1)
 
         if conn1 or conn2:
             return True
@@ -152,7 +146,7 @@ class Board:
             
 
     def _get_neighbours(self, row, col):
-        return [(r,c) for r in range(self.n) for c in range(self.n) if self._is_different_valid_pos(row, col, r, c)]
+        return [(r,c) for r in range(self.n) for c in range(self.n) if self._is_different_valid_pos(row, col, r, c) and self.board[row][col] == self.board[r][c]]
 
     def _is_different_valid_pos(self, row, col, new_row, new_col):
         return 0 <= new_row < self.n and 0 <= new_col < self.n and (row, col) != (new_row, new_col)
