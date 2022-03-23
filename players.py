@@ -15,10 +15,12 @@ class Player:
         return (orientation, direction)
 
 class Human(Player):
-    def __init__(self):
+    def __init__(self, name):
         super().__init__()
+        self.name = name
 
     def get_move(self, board):
+        print("Please input a valid move", self.name)
         row, col = Human._get_piece(board)
         orientation, direction  = Human._get_orientation_direction()
         return row, col, orientation, direction

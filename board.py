@@ -1,6 +1,3 @@
-from pandas import pivot
-
-
 EMPTY = 0
 WHITE = 2
 BLACK = 1
@@ -123,6 +120,8 @@ class Board:
         if conn1 or conn2:
             return True
 
+        return False
+
     def _no_pieces(self, player):
         return not len(self.players[player])
 
@@ -163,7 +162,7 @@ class Board:
             raise Exception
 
     def _get_neighbours(self, row, col):
-        return [(r, c) for r in range(self.n) for c in range(self.n) if self._is_different_valid_pos(row, col, r, c) and self.board[row][col] == self.board[r][c]]
+        return [(r, c) for r in range(row-1, row+2) for c in range(col-1, col+2) if self._is_different_valid_pos(row, col, r, c) and self.board[row][col] == self.board[r][c]]
 
     def _is_different_valid_pos(self, row, col, new_row, new_col):
         return 0 <= new_row < self.n and 0 <= new_col < self.n and (row, col) != (new_row, new_col)
