@@ -104,23 +104,37 @@ class Board:
         for i in range(2):
             self.players[i] = self.get_player_pieces(i)
 
-    def end_game(self):
+    def end_game(self, playing):
+        """
+        
+        Returns
+        -----
+        -1 No end game
+        0 or 1 Player that wins
+        """
 
         # Both can be affected by a play
+        capture_ending = False
+        group_ending = False
         end1 = self._no_pieces(0)
         end2 = self._no_pieces(1)
 
         if end1 or end2:
-            return True
+            capture_ending = True
 
         # Only the one of the player that played can be affected (towards better)
         conn1 = self._connected(0)
         conn2 = self._connected(1)
 
         if conn1 or conn2:
-            return True
+            group_ending = True
 
-        return False
+        if group_ending:
+            return playing
+        elif capture_ending:
+            return not playing
+        else:
+            return -1
 
     def _no_pieces(self, player):
         return not len(self.players[player])
@@ -160,6 +174,37 @@ class Board:
             return False
         else:
             raise Exception
+
+    def _get_connected_groups(self, player):
+        """
+        Returns
+        -----
+        found: dict([row,col]: number_of_group)
+            A dictionary with the pieces and the group they belong to
+        no_groups: int
+            The number of groups
+        """
+        pieces = self.players[player]
+        n_pieces = len(pieces)
+        not_found = set(pieces)
+        found = dict()
+        no_groups = 0
+
+        while not_found:
+            # Shouldn't need a `states` variable per group. Found does that job too
+            cur = not_found.pop()
+            found[cur] = no_groups
+            queue = {cur}
+            while queue:
+                row,col = queue.pop()
+                neighbours = self._get_neighbours(row, col)
+                for neigh in neighbours:
+                    if neigh not in found:
+                        found[neigh] = no_groups
+                        not_found.remove(neigh)
+            no_groups += 1
+
+        return found, no_groups
 
     def _get_neighbours(self, row, col):
         return [(r, c) for r in range(row-1, row+2) for c in range(col-1, col+2) if self._is_different_valid_pos(row, col, r, c) and self.board[row][col] == self.board[r][c]]

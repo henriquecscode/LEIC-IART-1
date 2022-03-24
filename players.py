@@ -1,5 +1,7 @@
 from multiprocessing import connection
+from algo import Algorithm
 from board import Board
+from game import Game
 
 class Player:
     def __init__(self):
@@ -26,7 +28,8 @@ class Human(Player):
         return row, col, orientation, direction
 
     @staticmethod
-    def _get_piece(board: Board):
+    def _get_piece(game: Game):
+        board = game.board
         while True:
             print("What piece to move? row-col")
             print(board)
@@ -71,10 +74,11 @@ class Human(Player):
 
 class AI(Player):
 
-    def __init__(self, algorithm = None):
+    def __init__(self, algorithm: Algorithm = None, is_maximizer = 1):
         super().__init__()
         self.algorithm = algorithm
+        self.maximizer = is_maximizer
 
-    def get_move(self, board):
-        move = self.algorithm(board)
+    def get_move(self, game):
+        move = self.algorithm(game, self.maximizer)
         return move

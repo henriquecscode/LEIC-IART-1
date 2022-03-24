@@ -1,26 +1,34 @@
 from board import Board, W
-from players import Player, Human, AI
 
 class Game:
-    def __init__(self, is_ai1: bool = False, is_ai2: bool = False, config = None) -> None:
+    def __init__(self, player1, player2, config = None) -> None:
         self.board = Board()
-        self.player1 = AI() if is_ai1 else Human("player 1")
-        self.player2 = AI() if is_ai2 else Human("player 2")
+        self.player1 = player1
+        self.player2 = player2
         self.players = [self.player1, self.player2]
         self.config = config
         self.playing = 0
+        self.winner = -1
 
     def play_game(self):
-        end_game = False
-        while not end_game:
+        end_game = -1
+        while end_game == -1:
             good_move = False
             while not good_move:
-                row, col, orientation, direction = self.players[self.playing].get_move(self.board)
-                good_move = self.board.play_piece(self.playing, row, col, orientation, direction)
+                row, col, orientation, direction = self.players[self.playing].get_move(self)
+                good_move, new_row, new_col = self.board.is_viable_move(self.playing, row, col, orientation, direction)
 
-            self.playing = not self.playing
-            end_game = self.board.end_game() #We need to take account the player here later
-            #Maybe return a list of the game winning scenarios and act accordingly
+            end_game = self.play_move(row, col, new_row, new_col)
+
+    def play_move(self, row, col, new_row, new_col):
+        if self.winner != -1:
+            return self.winner
+        self.board._move_piece(row, col, new_row, new_col)
+        end_game = self.board.end_game(self.playing)
+        self.playing = not self.playing
+        if end_game != -1:
+            self.winner = end_game
+        return end_game
 
         
 
