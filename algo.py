@@ -1,4 +1,5 @@
-from operator import is_
+from operator import is_, ne
+import typing as ty
 from board import Board
 from game import Game
 from math import inf
@@ -33,7 +34,7 @@ class Minimax(Algorithm):
                 return is_maximizer * inf, None
             elif game.winner == 1:
                 return is_maximizer * -inf, None
-        if depth:
+        if not depth:
             # check this later
             return is_maximizer * self.heuristic(game), None
 
@@ -44,19 +45,26 @@ class Minimax(Algorithm):
         for move in moves:
             child = copy(game)
             child.play_move(move[0], move[1], move[2], move[3])
-            new_val, _ = -self.negamax(child, depth -1, -b, -a, -is_maximizer)
+            new_val, _ = self.negamax(child, depth -1, -b, -a, -is_maximizer)
+            new_val = - new_val
             if new_val > value:
                 best_move = move
-                new_val = value
+                value = new_val
             a = max(a, value)
             if a >= b:
                 break # cut off branches (pruning)
         return value, best_move
 
+
+PIECES_MULTIPLIER = 1
+GROUPS_MULTIPLIER = 5
+CAPTURABLE_MULTIPLIER = 5
+FOOTPRINT_MULTIPLIER = 2
 # heuristics are always viewed from the point of view of player 0
 # color variable dictates how that will affect the choosing algorithm
 # need to find a way to return a copy of the object, not the same, so we can branch out? 
 def heuristic_1(game: Game):
+    return PIECES_MULTIPLIER * (len(game.board.players[0]) - len(game.board.players[1]))
     #number of pieces friendly is good
     #number of pieces enemy is bad
     pass
@@ -66,28 +74,34 @@ def heuristic_2(game: Game):
     #Number of pieces groups - the less number of groups, the better.
     #One could add the expected number of plays needed to connect X groups to the heuristic.
     #Since a group could be a single piece, if we have n groups,
-    #the best/minimum number of plays needed to connect them is n - 1.
-    pass
+
+    
+    player1_groups = game.board.get_connected_groups(0)
+    player2_groups = game.board.get_connected_groups(1)
+    return GROUPS_MULTIPLIER * (player1_groups[1] - player2_groups[0])
 
 def heuristic_3(game: Game):
-    #check how many pieces a player captured (12-number of pieces the player has on the board)
-    #and how many pieces of theirs got captured by the oponent
-    pass
-
-def heuristic_4(game: Game):
     #check if there are possible moves that will result in a capture
-    pass
-
-def heuristic_5(game: Game):
-    #check how many changes in direction the biggest group / path of pieces has
-    #a change in direction is basically a "corner" (it's, like, perpendicular)
-    pass
+    #We can capture the same as we can be captured? I think so
+    
+    moves = game.board.get_viable_moves(game.playing)
+    n_capturable = len((_ for _, _, new_row, new_col, _, _ in moves if game.board[new_row][new_col] == game.board._player_symbols[not game.playing]))
+    return CAPTURABLE_MULTIPLIER * n_capturable
  
-def heuristic_6 (game: Game):
-    #check how many pieces are in a straight line (opponent pieces that is)
-    pass
+def heuristic_4(game: Game):
+    def calculate_footprint(group: ty.List[tuple(int,int)]):
+        footprint = set(group)
+        for row, col in group:
+            footprint |= {(r, c) for r in range(row-1, row+2) for c in range(col-1, col+2) if game.board._is_different_valid_pos(row, col, r, c)}
+        return len(footprint)
 
-def heuristic_7(game: Game): #Might not be the best idea
-    #Another heuristic: "The Quad Heuristic - https://www.researchgate.net/profile/Jos-Uiterwijk/publication/220174487_The_Quad_Heuristic_in_Lines_of_Action/links/02e7e529a55a472bcc000000/The-Quad-Heuristic-in-Lines-of-Action.pdf?origin=publication_detail"
-    pass
+    player1_groups = game.board.get_connected_groups(0)
+    player2_groups = game.board.get_connected_groups(1)
+
+    groups = [[piece for piece in player1_groups[0] if player1_groups[0][piece] == n_group ] for n_group in range(player1_groups[1])]
+    footprint1 = sum(calculate_footprint(group) for group in groups)
+
+    groups = [[piece for piece in player2_groups[1] if player2_groups[1][piece] == n_group] for n_group in range(player2_groups[1])]
+    footprint2 = sum(calculate_footprint(group) for group in groups)
+    return FOOTPRINT_MULTIPLIER * (footprint1 - footprint2)
 

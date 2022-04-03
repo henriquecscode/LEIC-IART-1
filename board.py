@@ -175,7 +175,7 @@ class Board:
         else:
             raise Exception
 
-    def _get_connected_groups(self, player):
+    def get_connected_groups(self, player):
         """
         Returns
         -----
