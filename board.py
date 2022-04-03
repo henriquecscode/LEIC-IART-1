@@ -64,6 +64,17 @@ class Board:
         board = [Board.create_extreme_lines()] \
             + [Board.create_middle_lines() for _ in range(6)] \
             + [Board.create_extreme_lines()]
+
+        board = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 2, 0],
+        [2, 0, 0, 0, 0, 1, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 1, 1, 1, 0]
+        ]
         return board
 
     def __repr__(self) -> str:
@@ -201,6 +212,7 @@ class Board:
                 for neigh in neighbours:
                     if neigh not in found:
                         found[neigh] = no_groups
+                        # queue.add(neigh)
                         not_found.remove(neigh)
             no_groups += 1
 

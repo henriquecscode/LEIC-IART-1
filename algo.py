@@ -3,7 +3,7 @@ import typing as ty
 from board import Board
 from game import Game
 from math import inf
-from copy import copy
+from copy import copy, deepcopy
 class Algorithm:
 
     def __init__(self):
@@ -41,9 +41,9 @@ class Minimax(Algorithm):
         moves = game.board.get_viable_moves(game.playing)
 
         value = -inf
-        best_move = None
+        best_move = None #moves[0]
         for move in moves:
-            child = copy(game)
+            child = deepcopy(game)
             child.play_move(move[0], move[1], move[2], move[3])
             new_val, _ = self.negamax(child, depth -1, -b, -a, -is_maximizer)
             new_val = - new_val
@@ -78,14 +78,15 @@ def heuristic_2(game: Game):
     
     player1_groups = game.board.get_connected_groups(0)
     player2_groups = game.board.get_connected_groups(1)
-    return GROUPS_MULTIPLIER * (player1_groups[1] - player2_groups[0])
+    return GROUPS_MULTIPLIER * (player1_groups[1] - player2_groups[1])
 
 def heuristic_3(game: Game):
     #check if there are possible moves that will result in a capture
     #We can capture the same as we can be captured? I think so
-    
+
     moves = game.board.get_viable_moves(game.playing)
     n_capturable = len((_ for _, _, new_row, new_col, _, _ in moves if game.board[new_row][new_col] == game.board._player_symbols[not game.playing]))
+    n_capturable = n_capturable if game.playing == 0 else - n_capturable
     return CAPTURABLE_MULTIPLIER * n_capturable
  
 def heuristic_4(game: Game):

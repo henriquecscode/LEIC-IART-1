@@ -21,7 +21,8 @@ class Human(Player):
         super().__init__()
         self.name = name
 
-    def get_move(self, board):
+    def get_move(self, game: Game):
+        board = game.board
         print("Please input a valid move", self.name)
         row, col = Human._get_piece(board)
         orientation, direction  = Human._get_orientation_direction()
@@ -79,6 +80,11 @@ class AI(Player):
         self.algorithm = algorithm
         self.maximizer = is_maximizer
 
-    def get_move(self, game):
+    def get_move(self, game: Game):
+        if(game.playing):
+           print("Playing: ", 1)
+        else:
+            print("Playing:", 0)
+        print(game.board)
         move = self.algorithm(game, self.maximizer)
         return move
