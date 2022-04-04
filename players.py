@@ -22,9 +22,8 @@ class Human(Player):
         self.name = name
 
     def get_move(self, game: Game):
-        board = game.board
         print("Please input a valid move", self.name)
-        row, col = Human._get_piece(board)
+        row, col = Human._get_piece(game)
         orientation, direction  = Human._get_orientation_direction()
         return row, col, orientation, direction
 
