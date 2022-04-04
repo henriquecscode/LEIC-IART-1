@@ -75,6 +75,7 @@ class Board:
         [1, 0, 0, 0, 0, 0, 0, 0],
         [0, 1, 0, 1, 1, 1, 1, 0]
         ]
+
         return board
 
     def __repr__(self) -> str:
@@ -268,11 +269,12 @@ class Board:
         elif orientation == 1:
             no_moves = self.get_horizontal_n_pieces(row, col)
         elif orientation == 2:
-            no_moves = self.get_b24_diagonal_n_pieces(row, col)
-        elif orientation == 3:
             no_moves = self.get_b13_diagonal_n_pieces(row, col)
+        elif orientation == 3:
+            no_moves = self.get_b24_diagonal_n_pieces(row, col)
         else:
             raise Exception
+        
 
         vector = self._get_line_vector(orientation, direction)
         new_row, new_col = row, col
