@@ -141,9 +141,9 @@ class Board:
         if conn1 or conn2:
             group_ending = True
 
-        if group_ending:
+        if group_ending and not capture_ending:
             return playing
-        elif capture_ending:
+        elif group_ending and capture_ending:
             return not playing
         else:
             return -1

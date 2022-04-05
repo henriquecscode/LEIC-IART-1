@@ -41,7 +41,7 @@ class Minimax(Algorithm):
         moves = game.board.get_viable_moves(game.playing)
 
         value = -inf
-        best_move = None #moves[0]
+        best_move = moves[0]
         for move in moves:
             child = deepcopy(game)
             child.play_move(move[0], move[1], move[2], move[3])
