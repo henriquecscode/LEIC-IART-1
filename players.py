@@ -2,6 +2,12 @@ from algo import Algorithm
 from board import Board
 from game import Game
 
+class outcolors :
+    HEADING = '\033[38;5;135m'
+    INPUT_TEXT = '\u001b[38;5;183m'
+    MENU_TEXT = '\033[38;5;135m'
+    NORMAL = '\u001b[37m'
+    
 class Player:
     def __init__(self, name):
         self.name = name
@@ -29,7 +35,7 @@ class Human(Player):
     def _get_piece(game: Game):
         board = game.board
         while True:
-            print("What piece to move? row-col")
+            print(outcolors.INPUT_TEXT + "What piece to move (row-col)? " + outcolors.NORMAL)
             print(board)
             move = input()
             list = move.strip().split(' ')
@@ -45,7 +51,7 @@ class Human(Player):
     def _get_orientation_direction():
         while True:
             Human.print_move_options()
-            move = input("What direction to move\n")
+            move = input(outcolors.INPUT_TEXT + "What direction to move: " + outcolors.NORMAL)
             if move.isdigit():
                 move = int(move)
                 if 1 <= move <= 8:
@@ -64,7 +70,7 @@ class Human(Player):
 
     @staticmethod
     def print_move_options():
-        print("3-4-2")
+        print(outcolors.INPUT_TEXT + "3-4-2")
         print("-----")
         print("1-X-5")
         print("-----")
@@ -79,9 +85,9 @@ class AI(Player):
 
     def get_move(self, game: Game):
         if(game.playing):
-           print("Playing: ", 1)
+           print(outcolors.MENU_TEXT + "NOW PLAYING: 1" + outcolors.NORMAL)
         else:
-            print("Playing:", 0)
+            print(outcolors.MENU_TEXT + "NOW PLAYING: 0" + outcolors.NORMAL)
         print(game.board)
         move = self.algorithm(game, self.maximizer)
         return move
