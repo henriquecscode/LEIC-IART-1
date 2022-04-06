@@ -111,7 +111,7 @@ def heuristic_3(game: Game):
     return CAPTURABLE_MULTIPLIER * n_capturable
  
 def heuristic_4(game: Game):
-    def calculate_footprint(group: ty.List[tuple(int,int)]):
+    def calculate_footprint(group):
         footprint = set(group)
         for row, col in group:
             footprint |= {(r, c) for r in range(row-1, row+2) for c in range(col-1, col+2) if game.board._is_different_valid_pos(row, col, r, c)}
@@ -123,7 +123,9 @@ def heuristic_4(game: Game):
     groups = [[piece for piece in player1_groups[0] if player1_groups[0][piece] == n_group ] for n_group in range(player1_groups[1])]
     footprint1 = sum(calculate_footprint(group) for group in groups)
 
-    groups = [[piece for piece in player2_groups[1] if player2_groups[1][piece] == n_group] for n_group in range(player2_groups[1])]
+    groups = [[piece for piece in player2_groups[0] if player2_groups[0][piece] == n_group] for n_group in range(player2_groups[1])]
     footprint2 = sum(calculate_footprint(group) for group in groups)
+    
+    
     return FOOTPRINT_MULTIPLIER * (footprint1 - footprint2)
 
