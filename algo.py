@@ -1,9 +1,12 @@
 from operator import is_, ne
 import typing as ty
+
+from numpy import c_
 from board import Board
 from game import Game
 from math import inf
 from copy import deepcopy
+from time import time_ns, time, ctime, strftime
 import random
 class Algorithm:
 
@@ -23,10 +26,17 @@ class Minimax(Algorithm):
         super().__init__()
         self.depth = depth
         self.heuristic = heuristic
+        self.results = []
+        self.no_move = 0
 
     def __call__(self, game: Game, is_maximizer):
+        time_start = time_ns()
         _, move = self.negamax(game, self.depth, -inf, inf, is_maximizer)
         row, col, new_row, new_col, orientation, direction = move
+        time_end = time_ns()
+        duration = time_end - time_start
+        self.results.append((self.no_move, duration, *move))
+        self.no_move += 1
         return (row, col, orientation, direction)
     
     def negamax(self, game: Game, depth, a, b, is_maximizer): 
@@ -56,6 +66,13 @@ class Minimax(Algorithm):
                 break # cut off branches (pruning)
         return value, best_move
 
+    def export(self, file = None):
+        file = file if file else self.__class__.__name__+'_'+self.heuristic.__name__+'_'+strftime("%Y_%m_%d__%H_%M_%S")
+        file = './data/' + file + '.csv'
+        with open(file, 'w') as f:
+            f.write('Move,Time of computation,row, col, new_row, new_col, orientation, direction\n')
+            for result in self.results:
+                f.write(','.join(map(str, result))+ '\n')
 
 PIECES_MULTIPLIER = 1
 GROUPS_MULTIPLIER = 5

@@ -1,0 +1,4 @@
+Move,Time of computation,row, col, new_row, new_col, orientation, direction
+0,184047300,4,7,6,5,2,1
+1,243044800,6,0,5,1,2,0
+2,211998200,7,6,5,6,0,0

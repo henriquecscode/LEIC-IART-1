@@ -10,3 +10,5 @@ if __name__ == "__main__":
     player2 = AI(Minimax(3, heuristic_2), -1)
     game = Game(player1, player2)
     game.play_game()
+    player1.algorithm.export()
+    player2.algorithm.export()
