@@ -65,17 +65,6 @@ class Board:
             + [Board.create_middle_lines() for _ in range(6)] \
             + [Board.create_extreme_lines()]
 
-        board = [
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 1, 1],
-            [2, 0, 0, 0, 0, 2, 0, 0],
-            [1, 0, 0, 0, 1, 0, 0, 0],
-            [0, 1, 0, 1, 1, 1, 1, 0]
-        ]
-
         return board
 
     def __repr__(self) -> str:

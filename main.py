@@ -22,5 +22,5 @@ if __name__ == "__main__":
     game.play_game()
 
     #Make an if here so only ais do
-    #player1.algorithm.export()
-    #player2.algorithm.export()
+    player1.algorithm.export()
+    player2.algorithm.export()
