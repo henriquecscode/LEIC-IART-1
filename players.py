@@ -1,4 +1,3 @@
-from multiprocessing import connection
 from algo import Algorithm
 from board import Board
 from game import Game
