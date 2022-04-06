@@ -25,7 +25,7 @@ def getPlayer(number) :
     option = getOption(outcolors.INPUT_TEXT + 'Player type? ' + outcolors.NORMAL, 0, 1)
     if option == 0:
         name = input(outcolors.INPUT_TEXT + 'What is your player name? ' + outcolors.NORMAL)
-        return Player(name)
+        return Human(name)
     elif option == 1:
         algo = getOption(outcolors.INPUT_TEXT + '\nChoose your poison: \n' + outcolors.NORMAL + '1 - Number of Playable Pieces\n2 - Number of Groups of Pieces\n3 - Number of Plays that Result in a Capture\n4 - Footprint Maximizer\n\n' + outcolors.INPUT_TEXT + 'Your option: ' + outcolors.NORMAL, 1, 4)
         if algo == 1:
@@ -39,7 +39,7 @@ def getPlayer(number) :
         depth = getOption(outcolors.INPUT_TEXT + 'Input the desired depth (1-4): ' + outcolors.NORMAL, 1, 4)
         
         algorithm = Minimax(depth, heuristic)
-        personalized_name = getOption(outcolors.INPUT_TEXT + 'Do you want a personalized name? ' + outcolors.NORMAL, 0, 1)
+        personalized_name = getOption(outcolors.INPUT_TEXT + 'Do you want a personalized name (0 - no, 1 - yes)? ' + outcolors.NORMAL, 0, 1)
         if personalized_name:
             name = input(outcolors.INPUT_TEXT + 'Input your desired name: ' + outcolors.NORMAL)
         else:
