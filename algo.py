@@ -3,7 +3,8 @@ import typing as ty
 from board import Board
 from game import Game
 from math import inf
-from copy import copy, deepcopy
+from copy import deepcopy
+import random
 class Algorithm:
 
     def __init__(self):
@@ -39,7 +40,7 @@ class Minimax(Algorithm):
             return is_maximizer * self.heuristic(game), None
 
         moves = game.board.get_viable_moves(game.playing)
-
+        random.shuffle(moves) #Might enter in loop if we don't do this
         value = -inf
         best_move = moves[0]
         for move in moves:

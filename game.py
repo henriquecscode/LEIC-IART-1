@@ -1,4 +1,4 @@
-from board import Board, W
+from board import Board
 
 class Game:
     def __init__(self, player1, player2, config = None) -> None:
@@ -19,6 +19,8 @@ class Game:
                 good_move, new_row, new_col = self.board.is_viable_move(self.playing, row, col, orientation, direction)
 
             end_game = self.play_move(row, col, new_row, new_col)
+        print("Winner is", self.players[self.winner].name)
+        print(self.board)
 
     def play_move(self, row, col, new_row, new_col):
         if self.winner != -1:
@@ -29,10 +31,6 @@ class Game:
         if end_game != -1:
             self.winner = end_game
         return end_game
-
-        
-
-    
 
     def move_diagonal(self, is_left=True):
         pass

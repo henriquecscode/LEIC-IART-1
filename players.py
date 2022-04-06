@@ -4,8 +4,8 @@ from board import Board
 from game import Game
 
 class Player:
-    def __init__(self):
-        pass
+    def __init__(self, name):
+        self.name = name
 
     def play(self, board):
         return self.get_move(board)
@@ -18,8 +18,7 @@ class Player:
 
 class Human(Player):
     def __init__(self, name):
-        super().__init__()
-        self.name = name
+        super().__init__(name)
 
     def get_move(self, game: Game):
         print("Please input a valid move", self.name)
@@ -73,9 +72,9 @@ class Human(Player):
         print("6-8-7")
 
 class AI(Player):
-
-    def __init__(self, algorithm: Algorithm = None, is_maximizer = 1):
-        super().__init__()
+    def __init__(self, algorithm: Algorithm = None, is_maximizer = 1, name: str = None):        
+        name = name if name else algorithm.__class__.__name__ + ' ' + algorithm.heuristic.__name__
+        super().__init__(name)
         self.algorithm = algorithm
         self.maximizer = is_maximizer
 

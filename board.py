@@ -66,14 +66,14 @@ class Board:
             + [Board.create_extreme_lines()]
 
         board = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 2, 0],
-        [2, 0, 0, 0, 0, 1, 0, 0],
-        [1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 1, 1, 1, 1, 0]
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 1],
+            [2, 0, 0, 0, 0, 2, 0, 0],
+            [1, 0, 0, 0, 1, 0, 0, 0],
+            [0, 1, 0, 1, 1, 1, 1, 0]
         ]
 
         return board
@@ -149,7 +149,7 @@ class Board:
             return -1
 
     def _no_pieces(self, player):
-        return not len(self.players[player])
+        return len(self.players[player]) == 1
 
     def _connected(self, player):
         if len(self.players[player]) == 1:
