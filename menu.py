@@ -3,7 +3,7 @@
 
 
 from algo import Minimax, heuristic_1, heuristic_2, heuristic_3, heuristic_4
-from players import Player, AI, outcolors
+from players import Human, Player, AI, outcolors
 
 def menu() :
     print(outcolors.HEADING + '██╗░░░░░██╗███╗░░██╗███████╗░██████╗  ░█████╗░███████╗  ░█████╗░░█████╗░████████╗██╗░█████╗░███╗░░██╗\n██║░░░░░██║████╗░██║██╔════╝██╔════╝  ██╔══██╗██╔════╝  ██╔══██╗██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║\n██║░░░░░██║██╔██╗██║█████╗░░╚█████╗░  ██║░░██║█████╗░░  ███████║██║░░╚═╝░░░██║░░░██║██║░░██║██╔██╗██║\n██║░░░░░██║██║╚████║██╔══╝░░░╚═══██╗  ██║░░██║██╔══╝░░  ██╔══██║██║░░██╗░░░██║░░░██║██║░░██║██║╚████║\n███████╗██║██║░╚███║███████╗██████╔╝  ╚█████╔╝██║░░░░░  ██║░░██║╚█████╔╝░░░██║░░░██║╚█████╔╝██║░╚███║\n╚══════╝╚═╝╚═╝░░╚══╝╚══════╝╚═════╝░  ░╚════╝░╚═╝░░░░░  ╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝')
@@ -25,7 +25,7 @@ def getPlayer(number) :
     option = getOption(outcolors.INPUT_TEXT + 'Player type? ' + outcolors.NORMAL, 0, 1)
     if option == 0:
         name = input(outcolors.INPUT_TEXT + 'What is your player name? ' + outcolors.NORMAL)
-        return Player(name)
+        return Human(name)
     elif option == 1:
         algo = getOption(outcolors.INPUT_TEXT + '\nChoose your poison: \n' + outcolors.NORMAL + '1 - Number of Playable Pieces\n2 - Number of Groups of Pieces\n3 - Number of Plays that Result in a Capture\n4 - Footprint Maximizer\n\n' + outcolors.INPUT_TEXT + 'Your option: ' + outcolors.NORMAL, 1, 4)
         if algo == 1:
