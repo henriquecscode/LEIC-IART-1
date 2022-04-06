@@ -1,4 +1,5 @@
 from operator import is_, ne
+import sys
 import typing as ty
 
 from numpy import c_
@@ -103,7 +104,9 @@ def heuristic_3(game: Game):
     #We can capture the same as we can be captured? I think so
 
     moves = game.board.get_viable_moves(game.playing)
-    n_capturable = len((_ for _, _, new_row, new_col, _, _ in moves if game.board[new_row][new_col] == game.board._player_symbols[not game.playing]))
+    n_capturable = (_ for _, _, new_row, new_col, _, _ in moves 
+        if game.board[new_row][new_col] == game.board._player_symbols[not game.playing])
+    n_capturable=sys.getsizeof(n_capturable)
     n_capturable = n_capturable if game.playing == 0 else - n_capturable
     return CAPTURABLE_MULTIPLIER * n_capturable
  
