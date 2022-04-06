@@ -39,7 +39,7 @@ def getPlayer(number) :
         depth = getOption(outcolors.INPUT_TEXT + 'Input the desired depth (1-4): ' + outcolors.NORMAL, 1, 4)
         
         algorithm = Minimax(depth, heuristic)
-        personalized_name = getOption(outcolors.INPUT_TEXT + 'Do you want a personalized name? (Input 0 for no and input 1 for yes)' + outcolors.NORMAL, 0, 1)
+        personalized_name = getOption(outcolors.INPUT_TEXT + 'Do you want a personalized name (0 - no, 1 - yes)? ' + outcolors.NORMAL, 0, 1)
         if personalized_name:
             name = input(outcolors.INPUT_TEXT + 'Input your desired name: ' + outcolors.NORMAL)
         else:
