@@ -27,7 +27,7 @@ def getPlayer(number) :
         name = input(outcolors.INPUT_TEXT + 'What is your player name? ' + outcolors.NORMAL)
         return Human(name)
     elif option == 1:
-        algo = getOption(outcolors.INPUT_TEXT + '\nChoose your poison: \n' + outcolors.NORMAL + '1 - Number of Playable Pieces\n2 - Number of Groups of Pieces\n3 - Number of Plays that Result in a Capture\n4 - Footprint Maximizer\n\n' + outcolors.INPUT_TEXT + 'Your option: ' + outcolors.NORMAL, 1, 4)
+        algo = getOption(outcolors.INPUT_TEXT + '\nChoose your poison: \n' + outcolors.NORMAL + "1 - Number of Playable Pieces [You'll live.]\n2 - Number of Groups of Pieces [You'll probably survive.]\n3 - Number of Plays that Result in a Capture [You MIGHT die.]\n4 - Footprint Maximizer [...So you've chosen death?]\n\n" + outcolors.INPUT_TEXT + 'Your option: ' + outcolors.NORMAL, 1, 4)
         if algo == 1:
             heuristic = heuristic_1
         elif algo == 2:
