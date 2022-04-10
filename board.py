@@ -6,8 +6,6 @@ BLACK = 1
 # Each movement will therefore update the values for every piece so taht the AI can just look up instead of having to calculate for each
 # Piece{ coord: (int, int), no_in_same_horizontal: int, no_in_same_vertical: int, no_in_b13_dia: int, no_in_b24_dia: int}
 # Each player is a list of their pieces
-
-
 class Piece:
     def __init__(self, s) -> None:
         self.symbol = s
@@ -22,7 +20,6 @@ class Empty(Piece):
 
 
 E = Empty()
-
 
 class White(Piece):
     def __init__(self) -> None:
@@ -66,6 +63,9 @@ class Board:
             + [Board.create_extreme_lines()]
 
         return board
+
+    def __getitem__(self, index):
+        return self.board[index]
 
     def __repr__(self) -> str:
         rep = '\n'

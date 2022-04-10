@@ -40,3 +40,4 @@ class Game:
 
     def move_vertical(self, is_left):
         pass
+        

@@ -7,6 +7,9 @@ class outcolors :
     INPUT_TEXT = '\u001b[38;5;183m'
     MENU_TEXT = '\033[38;5;135m'
     NORMAL = '\u001b[37m'
+    COORDINATES = '\033[38;5;135m'
+    RED = '\u001b[31m'
+    BLUE = '\u001b[34m'
     
 class Player:
     def __init__(self, name):
@@ -26,7 +29,6 @@ class Human(Player):
         super().__init__(name)
 
     def get_move(self, game: Game):
-        print("Please input a valid move", self.name)
         row, col = Human._get_piece(game)
         orientation, direction  = Human._get_orientation_direction()
         return row, col, orientation, direction
@@ -35,8 +37,9 @@ class Human(Player):
     def _get_piece(game: Game):
         board = game.board
         while True:
-            print(outcolors.INPUT_TEXT + "What piece to move (row-col)? " + outcolors.NORMAL)
-            print(board)
+            print()
+            _print_board(board)
+            print(outcolors.INPUT_TEXT + "\nWhat piece to move (row col)? " + outcolors.NORMAL)
             move = input()
             list = move.strip().split(' ')
             row = list[0]
@@ -91,3 +94,21 @@ class AI(Player):
         print(game.board)
         move = self.algorithm(game, self.maximizer)
         return move
+
+def _print_board(board):
+    def _print_line(line):
+        for i in range(0, 8):
+            if (line[i] == 1):
+                print(outcolors.RED, end="")
+            elif (line[i] == 2):
+                print(outcolors.BLUE, end="")
+            else:
+                print(outcolors.NORMAL, end="")
+            
+            print(" " + str(line[i]), end="")
+    
+    print(outcolors.COORDINATES + "  0 1 2 3 4 5 6 7")
+    for i in range(0, 8):
+        print(outcolors.COORDINATES + str(i) + outcolors.NORMAL, end="")
+        _print_line(board[i])
+        print()
