@@ -16,6 +16,7 @@ class Game:
             good_move = False
             while not good_move:
                 row, col, orientation, direction = self.players[self.playing].get_move(self)
+                print("Played the piece that was in",row, col)
                 good_move, new_row, new_col = self.board.is_viable_move(self.playing, row, col, orientation, direction)
 
             end_game = self.play_move(row, col, new_row, new_col)
