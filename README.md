@@ -10,7 +10,7 @@ Mateus Silva, up201906232
 
 ## The Game
 
-*Lines of Action* is a 1v1 board game in which players take turns in moving one of their pieces at a time - the catch? They can only move as many spaces as the *line of action* allows: if we move horizontally, then the number of pieces in the line in which we're moving determines exactly how many places we can move. Same happens vertically and diagonally.
+*Lines of Action* is a 1v1 board game in which players take turns in moving one of their pieces at a time - the catch? They can only move as many spaces as the *line of action* allows: if we move horizontally, then the number of pieces in the line determines exactly how many places we can move. Same happens vertically and diagonally.
 
 Players can capture the opponent's pieces with an exact movement to a piece's position; they can also skip over their own pieces, but never an opponent's. The end goal? Connecting all pieces: as long as all pieces can be reached from which ever piece we start in a group, the pieces are connected.
 
