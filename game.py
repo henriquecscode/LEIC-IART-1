@@ -1,4 +1,6 @@
+import itertools
 from board import Board
+from utils import outcolors, _print_board
 
 class Game:
     def __init__(self, player1, player2, config = None) -> None:
@@ -16,12 +18,12 @@ class Game:
             good_move = False
             while not good_move:
                 row, col, orientation, direction = self.players[self.playing].get_move(self)
-                print("Played the piece that was in",row, col)
+                print("Played the piece that was in (" + str(row) + ", " + str(col) + ").\n")
                 good_move, new_row, new_col = self.board.is_viable_move(self.playing, row, col, orientation, direction)
 
             end_game = self.play_move(row, col, new_row, new_col)
-        print("Winner is", self.players[self.winner].name)
-        print(self.board)
+        print('\033[38;5;135m' + "Winner is", self.players[self.winner].name + '\n') 
+        _print_board(self.board)
 
     def play_move(self, row, col, new_row, new_col):
         if self.winner != -1:
@@ -41,4 +43,3 @@ class Game:
 
     def move_vertical(self, is_left):
         pass
-        
