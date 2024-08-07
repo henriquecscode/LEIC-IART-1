@@ -2,11 +2,11 @@
 
 ## Contributors
 
-Henrique Sousa, up201906681
+[Henrique Sousa (Self)](https://github.com/henriquecscode)
 
-Melissa Silva, up201905076
+[Mateus Silva](https://github.com/lessthelonely)
 
-Mateus Silva, up201906232
+[Melissa Silva](https://github.com/melisilva)
 
 ## The Game
 
